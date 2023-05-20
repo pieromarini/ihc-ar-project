@@ -53,5 +53,47 @@ public class ArrowImageDetection : MonoBehaviour
                 parent.SetActive(false);
             }
         }
+
+        foreach(var trackedImage in eventArgs.updated)
+        {
+            GameObject parent = trackedImage.gameObject;
+			parent.SetActive(true);
+			switch (trackedImage.referenceImage.name)
+			{
+			    case "Right":
+				parent.transform.GetChild(0).gameObject.SetActive(trackedImage.trackingState == TrackingState.Tracking);
+				break;
+			    case "Left":
+				parent.transform.GetChild(1).gameObject.SetActive(trackedImage.trackingState == TrackingState.Tracking);
+				break;
+			    case "Forward":
+				parent.transform.GetChild(2).gameObject.SetActive(trackedImage.trackingState == TrackingState.Tracking);
+				break;
+			    case "Backward":
+				parent.transform.GetChild(3).gameObject.SetActive(trackedImage.trackingState == TrackingState.Tracking);
+				break;
+			}
+        }
+
+        foreach(var trackedImage in eventArgs.removed)
+        {
+            GameObject parent = trackedImage.gameObject;
+			parent.SetActive(true);
+			switch (trackedImage.referenceImage.name)
+			{
+			    case "Right":
+				parent.transform.GetChild(0).gameObject.SetActive(false);
+				break;
+			    case "Left":
+				parent.transform.GetChild(1).gameObject.SetActive(false);
+				break;
+			    case "Forward":
+				parent.transform.GetChild(2).gameObject.SetActive(false);
+				break;
+			    case "Backward":
+				parent.transform.GetChild(3).gameObject.SetActive(false);
+				break;
+			}
+        }
     }
 }
