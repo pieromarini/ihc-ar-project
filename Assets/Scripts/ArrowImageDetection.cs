@@ -24,6 +24,28 @@ public class ArrowImageDetection : MonoBehaviour
         _arTrackedImageManager.trackedImagesChanged -= OnImageChanged;
     }
 
+    private void updateTrackedImage(string name, bool state, Transform t)
+    { 
+		switch (name)
+		{
+		    case "Right":
+				t.GetChild(0).gameObject.SetActive(state);
+				break;
+
+		    case "Left":
+				t.GetChild(1).gameObject.SetActive(state);
+				break;
+
+		    case "Forward":
+				t.GetChild(2).gameObject.SetActive(state);
+				break;
+
+		    case "Backward":
+				t.GetChild(3).gameObject.SetActive(state);
+				break;
+		}
+    }
+
     private void OnImageChanged(ARTrackedImagesChangedEventArgs eventArgs)
     {
         foreach(var trackedImage in eventArgs.added)
@@ -32,21 +54,7 @@ public class ArrowImageDetection : MonoBehaviour
             if (trackedImage.trackingState != TrackingState.None)
             {
                 parent.SetActive(true);
-                switch (trackedImage.referenceImage.name)
-                {
-                    case "Right":
-                        parent.transform.GetChild(0).gameObject.SetActive(true);
-                        break;
-                    case "Left":
-                        parent.transform.GetChild(1).gameObject.SetActive(true);
-                        break;
-                    case "Forward":
-                        parent.transform.GetChild(2).gameObject.SetActive(true);
-                        break;
-                    case "Backward":
-                        parent.transform.GetChild(3).gameObject.SetActive(true);
-                        break;
-                }
+                updateTrackedImage(trackedImage.referenceImage.name, true, parent.transform);
             }
             else
             {
@@ -58,42 +66,14 @@ public class ArrowImageDetection : MonoBehaviour
         {
             GameObject parent = trackedImage.gameObject;
 			parent.SetActive(true);
-			switch (trackedImage.referenceImage.name)
-			{
-			    case "Right":
-				parent.transform.GetChild(0).gameObject.SetActive(trackedImage.trackingState == TrackingState.Tracking);
-				break;
-			    case "Left":
-				parent.transform.GetChild(1).gameObject.SetActive(trackedImage.trackingState == TrackingState.Tracking);
-				break;
-			    case "Forward":
-				parent.transform.GetChild(2).gameObject.SetActive(trackedImage.trackingState == TrackingState.Tracking);
-				break;
-			    case "Backward":
-				parent.transform.GetChild(3).gameObject.SetActive(trackedImage.trackingState == TrackingState.Tracking);
-				break;
-			}
+            updateTrackedImage(trackedImage.referenceImage.name, trackedImage.trackingState == TrackingState.Tracking, parent.transform);
         }
 
         foreach(var trackedImage in eventArgs.removed)
         {
             GameObject parent = trackedImage.gameObject;
 			parent.SetActive(true);
-			switch (trackedImage.referenceImage.name)
-			{
-			    case "Right":
-				parent.transform.GetChild(0).gameObject.SetActive(false);
-				break;
-			    case "Left":
-				parent.transform.GetChild(1).gameObject.SetActive(false);
-				break;
-			    case "Forward":
-				parent.transform.GetChild(2).gameObject.SetActive(false);
-				break;
-			    case "Backward":
-				parent.transform.GetChild(3).gameObject.SetActive(false);
-				break;
-			}
+            updateTrackedImage(trackedImage.referenceImage.name, false, parent.transform);
         }
     }
 }
